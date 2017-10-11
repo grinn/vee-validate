@@ -65,15 +65,18 @@ var patterns = {
  * Function accepts complete ISO 8601 formats as well as partial implementations.
  * ISO 8601: http://en.wikipedia.org/wiki/ISO_8601
  *
+ * If the argument is null, it is treated as an invalid date.
+ *
  * If all above fails, the function passes the given argument to Date constructor.
  *
  * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
  * All *date-fns* functions will throw `RangeError` if `options.additionalDigits` is not 0, 1, 2 or undefined.
  *
- * @param {Date|String|Number} argument - the value to convert
+ * @param {*} argument - the value to convert
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - the additional number of digits in the extended year format
  * @returns {Date} the parsed date in the local time zone
+ * @throws {TypeError} 1 argument required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -88,6 +91,14 @@ var patterns = {
  * //=> Fri Apr 11 2014 00:00:00
  */
 function toDate (argument, dirtyOptions) {
+  if (arguments.length < 1) {
+    throw new TypeError('1 argument required, but only ' + arguments.length + ' present')
+  }
+
+  if (argument === null) {
+    return new Date(NaN)
+  }
+
   var options = dirtyOptions || {};
 
   var additionalDigits = options.additionalDigits === undefined ? DEFAULT_ADDITIONAL_DIGITS : Number(options.additionalDigits);
@@ -344,6 +355,7 @@ function dayOfISOYear (isoYear, week, day) {
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @returns {Date} the new date with the milliseconds added
+ * @throws {TypeError} 2 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -352,6 +364,10 @@ function dayOfISOYear (isoYear, week, day) {
  * //=> Thu Jul 10 2014 12:45:30.750
  */
 function addMilliseconds (dirtyDate, dirtyAmount, dirtyOptions) {
+  if (arguments.length < 2) {
+    throw new TypeError('2 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var timestamp = toDate(dirtyDate, dirtyOptions).getTime();
   var amount = Number(dirtyAmount);
   return new Date(timestamp + amount)
@@ -385,6 +401,7 @@ var MILLISECONDS_IN_MINUTE$2 = 60000;
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @returns {Date} the new date with the minutes added
+ * @throws {TypeError} 2 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -393,6 +410,10 @@ var MILLISECONDS_IN_MINUTE$2 = 60000;
  * //=> Thu Jul 10 2014 12:30:00
  */
 function addMinutes (dirtyDate, dirtyAmount, dirtyOptions) {
+  if (arguments.length < 2) {
+    throw new TypeError('2 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var amount = Number(dirtyAmount);
   return addMilliseconds(dirtyDate, amount * MILLISECONDS_IN_MINUTE$2, dirtyOptions)
 }
@@ -409,10 +430,11 @@ function addMinutes (dirtyDate, dirtyAmount, dirtyOptions) {
  *
  * Time value of Date: http://es5.github.io/#x15.9.1.1
  *
- * @param {Date|String|Number} date - the date to check
+ * @param {*} date - the date to check
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @returns {Boolean} the date is valid
+ * @throws {TypeError} 1 argument required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -431,6 +453,10 @@ function addMinutes (dirtyDate, dirtyAmount, dirtyOptions) {
  * //=> false
  */
 function isValid (dirtyDate, dirtyOptions) {
+  if (arguments.length < 1) {
+    throw new TypeError('1 argument required, but only ' + arguments.length + ' present')
+  }
+
   var date = toDate(dirtyDate, dirtyOptions);
   return !isNaN(date)
 }
@@ -1381,6 +1407,7 @@ var defaultFormattingTokensRegExp = /(\[[^[]*])|(\\)?(x|ss|s|mm|m|hh|h|do|dddd|d
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @param {Locale} [options.locale=defaultLocale] - the locale object. See [Locale]{@link https://date-fns.org/docs/Locale}
  * @returns {String} the formatted date string
+ * @throws {TypeError} 2 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  * @throws {RangeError} `options.locale` must contain `localize` property
  * @throws {RangeError} `options.locale` must contain `formatLong` property
@@ -1404,6 +1431,10 @@ var defaultFormattingTokensRegExp = /(\[[^[]*])|(\\)?(x|ss|s|mm|m|hh|h|do|dddd|d
  * //=> '2-a de julio 2014'
  */
 function format (dirtyDate, dirtyFormatStr, dirtyOptions) {
+  if (arguments.length < 2) {
+    throw new TypeError('2 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var formatStr = String(dirtyFormatStr);
   var options = dirtyOptions || {};
 
@@ -1487,6 +1518,7 @@ function cleanEscapedString (input) {
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @returns {Date} the new date with the mintues subtracted
+ * @throws {TypeError} 2 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -1495,6 +1527,10 @@ function cleanEscapedString (input) {
  * //=> Thu Jul 10 2014 11:30:00
  */
 function subMinutes (dirtyDate, dirtyAmount, dirtyOptions) {
+  if (arguments.length < 2) {
+    throw new TypeError('2 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var amount = Number(dirtyAmount);
   return addMinutes(dirtyDate, -amount, dirtyOptions)
 }
@@ -1512,6 +1548,7 @@ function subMinutes (dirtyDate, dirtyAmount, dirtyOptions) {
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @returns {Boolean} the first date is after the second date
+ * @throws {TypeError} 2 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -1520,6 +1557,10 @@ function subMinutes (dirtyDate, dirtyAmount, dirtyOptions) {
  * //=> true
  */
 function isAfter (dirtyDate, dirtyDateToCompare, dirtyOptions) {
+  if (arguments.length < 2) {
+    throw new TypeError('2 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var date = toDate(dirtyDate, dirtyOptions);
   var dateToCompare = toDate(dirtyDateToCompare, dirtyOptions);
   return date.getTime() > dateToCompare.getTime()
@@ -1538,6 +1579,7 @@ function isAfter (dirtyDate, dirtyDateToCompare, dirtyOptions) {
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @returns {Boolean} the first date is before the second date
+ * @throws {TypeError} 2 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -1546,6 +1588,10 @@ function isAfter (dirtyDate, dirtyDateToCompare, dirtyOptions) {
  * //=> false
  */
 function isBefore (dirtyDate, dirtyDateToCompare, dirtyOptions) {
+  if (arguments.length < 2) {
+    throw new TypeError('2 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var date = toDate(dirtyDate, dirtyOptions);
   var dateToCompare = toDate(dirtyDateToCompare, dirtyOptions);
   return date.getTime() < dateToCompare.getTime()
@@ -1564,6 +1610,7 @@ function isBefore (dirtyDate, dirtyDateToCompare, dirtyOptions) {
  * @param {Options} [options] - the object with options. See [Options]{@link https://date-fns.org/docs/Options}
  * @param {0|1|2} [options.additionalDigits=2] - passed to `toDate`. See [toDate]{@link https://date-fns.org/docs/toDate}
  * @returns {Boolean} the dates are equal
+ * @throws {TypeError} 2 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  *
  * @example
@@ -1575,6 +1622,10 @@ function isBefore (dirtyDate, dirtyDateToCompare, dirtyOptions) {
  * //=> false
  */
 function isEqual (dirtyLeftDate, dirtyRightDate, dirtyOptions) {
+  if (arguments.length < 2) {
+    throw new TypeError('2 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var dateLeft = toDate(dirtyLeftDate, dirtyOptions);
   var dateRight = toDate(dirtyRightDate, dirtyOptions);
   return dateLeft.getTime() === dateRight.getTime()
@@ -2381,6 +2432,7 @@ var defaultParsingTokensRegExp = /(\[[^[]*])|(\\)?(x|ss|s|mm|m|hh|h|do|dddd|ddd|
  * @param {Locale} [options.locale=defaultLocale] - the locale object. See [Locale]{@link https://date-fns.org/docs/Locale}
  * @param {0|1|2|3|4|5|6} [options.weekStartsOn=0] - the index of the first day of the week (0 - Sunday)
  * @returns {Date} the parsed date
+ * @throws {TypeError} 3 arguments required
  * @throws {RangeError} `options.additionalDigits` must be 0, 1 or 2
  * @throws {RangeError} `options.weekStartsOn` must be between 0 and 6
  * @throws {RangeError} `options.locale` must contain `match` property
@@ -2407,6 +2459,10 @@ var defaultParsingTokensRegExp = /(\[[^[]*])|(\\)?(x|ss|s|mm|m|hh|h|do|dddd|ddd|
  * //=> Sun Feb 28 2010 00:00:00
  */
 function parse (dirtyDateString, dirtyFormatString, dirtyBaseDate, dirtyOptions) {
+  if (arguments.length < 3) {
+    throw new TypeError('3 arguments required, but only ' + arguments.length + ' present')
+  }
+
   var dateString = String(dirtyDateString);
   var options = dirtyOptions || {};
 
@@ -2570,13 +2626,12 @@ function cleanEscapedString$1 (input) {
 
 // This file is generated automatically by `scripts/build/indices.js`. Please, don't change it.
 
+// 
+
 /**
  * Custom parse behavior on top of date-fns parse function.
- * @param {String} date
- * @param {String} format
- * @return {Date|null}
  */
-var parseDate$1 = function (date, format$$1) {
+function parseDate$1 (date, format$$1) {
   var parsed = parse(date, format$$1, new Date());
 
   // if date is not valid or the formatted output after parsing does not match
@@ -2586,7 +2641,7 @@ var parseDate$1 = function (date, format$$1) {
   }
 
   return parsed;
-};
+}
 
 var after = function (value, ref) {
   var otherValue = ref[0];
@@ -3326,6 +3381,8 @@ var ip = function (value, ref) {
   return isIP(value, version);
 };
 
+// 
+
 /**
  * Gets the data attribute. the name must be kebab-case.
  */
@@ -3333,7 +3390,6 @@ var getDataAttribute = function (el, name) { return el.getAttribute(("data-vv-" 
 
 /**
  * Checks if the value is either null or undefined.
- * @param {*} value
  */
 var isNullOrUndefined = function (value) {
   return value === null || value === undefined;
@@ -3341,12 +3397,12 @@ var isNullOrUndefined = function (value) {
 
 /**
  * Sets the data attribute.
- * @param {*} el
- * @param {String} name
- * @param {String} value
  */
 var setDataAttribute = function (el, name, value) { return el.setAttribute(("data-vv-" + name), value); };
 
+/**
+ * Creates a proxy object if available in the environment.
+ */
 var createProxy = function (target, handler) {
   if (typeof Proxy === 'undefined') {
     return target;
@@ -3355,6 +3411,9 @@ var createProxy = function (target, handler) {
   return new Proxy(target, handler);
 };
 
+/**
+ * Creates the default flags object.
+ */
 var createFlags = function () { return ({
   untouched: true,
   touched: false,
@@ -3369,10 +3428,6 @@ var createFlags = function () { return ({
 
 /**
  * Shallow object comparison.
- *
- * @param {*} lhs
- * @param {*} rhs
- * @return {Boolean}
  */
 var isEqual$1 = function (lhs, rhs) {
   if (lhs instanceof RegExp && rhs instanceof RegExp) {
@@ -3417,16 +3472,14 @@ var getScope = function (el) {
 
 /**
  * Gets the value in an object safely.
- * @param {String} propPath
- * @param {Object} target
- * @param {*} def
  */
-var getPath = function (propPath, target, def) {
+var getPath = function (path, target, def) {
   if ( def === void 0 ) def = undefined;
 
-  if (!propPath || !target) { return def; }
+  if (!path || !target) { return def; }
+
   var value = target;
-  propPath.split('.').every(function (prop) {
+  path.split('.').every(function (prop) {
     if (! Object.prototype.hasOwnProperty.call(value, prop) && value[prop] === undefined) {
       value = def;
 
@@ -3443,9 +3496,6 @@ var getPath = function (propPath, target, def) {
 
 /**
  * Checks if path exists within an object.
- *
- * @param {String} path
- * @param {Object} target
  */
 var hasPath = function (path, target) {
   var obj = target;
@@ -3461,7 +3511,7 @@ var hasPath = function (path, target) {
 };
 
 /**
- * @param {String} rule
+ * Parses a rule string expression.
  */
 var parseRule = function (rule) {
   var params = [];
@@ -3472,54 +3522,6 @@ var parseRule = function (rule) {
   }
 
   return { name: name, params: params };
-};
-
-/**
- * Normalizes the given rules expression.
- *
- * @param {Object|String} rules
- */
-var normalizeRules = function (rules) {
-  // if falsy value return an empty object.
-  if (!rules) {
-    return {};
-  }
-
-  var validations = {};
-  if (isObject(rules)) {
-    Object.keys(rules).forEach(function (rule) {
-      var params = [];
-      if (rules[rule] === true) {
-        params = [];
-      } else if (Array.isArray(rules[rule])) {
-        params = rules[rule];
-      } else {
-        params = [rules[rule]];
-      }
-
-      if (rules[rule] !== false) {
-        validations[rule] = params;
-      }
-    });
-
-    return validations;
-  }
-
-  if (typeof rules !== 'string') {
-    warn('rules must be either a string or an object.');
-    return {};
-  }
-
-  rules.split('|').forEach(function (rule) {
-    var parsedRule = parseRule(rule);
-    if (! parsedRule.name) {
-      return;
-    }
-
-    validations[parsedRule.name] = parsedRule.params;
-  });
-
-  return validations;
 };
 
 /**
@@ -3553,6 +3555,53 @@ var debounce = function (fn, wait, immediate) {
 };
 
 /**
+ * Normalizes the given rules expression.
+ */
+var normalizeRules = function (rules) {
+  // if falsy value return an empty object.
+  if (!rules) {
+    return {};
+  }
+
+  if (isObject(rules)) {
+    // $FlowFixMe
+    return Object.keys(rules).reduce(function (prev, curr) {
+      var params = [];
+      // $FlowFixMe
+      if (rules[curr] === true) {
+        params = [];
+      } else if (Array.isArray(rules[curr])) {
+        params = rules[curr];
+      } else {
+        params = [rules[curr]];
+      }
+
+      // $FlowFixMe
+      if (rules[curr] !== false) {
+        prev[curr] = params;
+      }
+
+      return prev;
+    }, {});
+  }
+
+  if (typeof rules !== 'string') {
+    warn('rules must be either a string or an object.');
+    return {};
+  }
+
+  return rules.split('|').reduce(function (prev, rule) {
+    var parsedRule = parseRule(rule);
+    if (!parsedRule.name) {
+      return prev;
+    }
+
+    prev[parsedRule.name] = parsedRule.params;
+    return prev;
+  }, {});
+};
+
+/**
  * Emits a warning to the console.
  */
 var warn = function (message) {
@@ -3561,14 +3610,13 @@ var warn = function (message) {
 
 /**
  * Creates a branded error object.
- * @param {String} message
  */
 var createError = function (message) { return new Error(("[vee-validate] " + message)); };
 
 /**
  * Checks if the value is an object.
  */
-var isObject = function (object) { return object !== null && object && typeof object === 'object' && ! Array.isArray(object); };
+var isObject = function (obj) { return obj !== null && obj && typeof obj === 'object' && ! Array.isArray(obj); };
 
 /**
  * Checks if a function is callable.
@@ -3629,8 +3677,7 @@ var toggleClass = function (el, className, status) {
 };
 
 /**
- * Converts an array-like object to array.
- * Simple polyfill for Array.from
+ * Converts an array-like object to array, provides a simple polyfill for Array.from
  */
 var toArray = function (arrayLike) {
   if (isCallable(Array.from)) {
@@ -3648,8 +3695,6 @@ var toArray = function (arrayLike) {
 
 /**
  * Assign polyfill from the mdn.
- * @param {Object} target
- * @return {Object}
  */
 var assign = function (target) {
   var others = [], len = arguments.length - 1;
@@ -3682,22 +3727,19 @@ var assign = function (target) {
 
 /**
  * Generates a unique id.
- * @return {String}
  */
 var uniqId = function () { return ("_" + (Math.random().toString(36).substr(2, 9))); };
 
 /**
- * polyfills array.find
- * @param {Array} array
- * @param {Function} predicate
+ * finds the first element that satisfies the predicate callback, polyfills array.find
  */
-var find = function (array, predicate) {
-  if (isObject(array)) {
-    array = toArray(array);
-  }
-  if (array.find) {
+var find = function (arrayLike, predicate) {
+  var array = toArray(arrayLike);
+
+  if (isCallable(array.find)) {
     return array.find(predicate);
   }
+
   var result;
   array.some(function (item) {
     if (predicate(item)) {
@@ -3711,6 +3753,9 @@ var find = function (array, predicate) {
   return result;
 };
 
+/**
+ * Returns a suitable event name for the input element.
+ */
 var getInputEventName = function (el) {
   if (el && (el.tagName === 'SELECT' || ~['radio', 'checkbox', 'file'].indexOf(el.type))) {
     return 'change';
@@ -4073,456 +4118,6 @@ var Rules = {
   url: url
 };
 
-var ErrorBag = function ErrorBag () {
-  this.items = [];
-};
-
-/**
-   * Adds an error to the internal array.
-   *
-   * @param {Object} error The error object.
-   */
-ErrorBag.prototype.add = function add (error) {
-  // handle old signature.
-  if (arguments.length > 1) {
-    error = {
-      field: arguments[0],
-      msg: arguments[1],
-      rule: arguments[2],
-      scope: !isNullOrUndefined(arguments[3]) ? arguments[3] : null
-    };
-  }
-
-  error.scope = !isNullOrUndefined(error.scope) ? error.scope : null;
-  this.items.push(error);
-};
-
-/**
- * Updates a field error with the new field scope.
- *
- * @param {String} id
- * @param {Object} error
- */
-ErrorBag.prototype.update = function update (id, error) {
-  var item = find(this.items, function (i) { return i.id === id; });
-  if (!item) {
-    return;
-  }
-
-  var idx = this.items.indexOf(item);
-  this.items.splice(idx, 1);
-  item.scope = error.scope;
-  this.items.push(item);
-};
-
-/**
-   * Gets all error messages from the internal array.
-   *
-   * @param {String} scope The Scope name, optional.
-   * @return {Array} errors Array of all error messages.
-   */
-ErrorBag.prototype.all = function all (scope) {
-  if (isNullOrUndefined(scope)) {
-    return this.items.map(function (e) { return e.msg; });
-  }
-
-  return this.items.filter(function (e) { return e.scope === scope; }).map(function (e) { return e.msg; });
-};
-
-/**
-   * Checks if there are any errors in the internal array.
-   * @param {String} scope The Scope name, optional.
-   * @return {boolean} result True if there was at least one error, false otherwise.
-   */
-ErrorBag.prototype.any = function any (scope) {
-  if (isNullOrUndefined(scope)) {
-    return !! this.items.length;
-  }
-
-  return !! this.items.filter(function (e) { return e.scope === scope; }).length;
-};
-
-/**
-   * Removes all items from the internal array.
-   *
-   * @param {String} scope The Scope name, optional.
-   */
-ErrorBag.prototype.clear = function clear (scope) {
-    var this$1 = this;
-
-  if (isNullOrUndefined(scope)) {
-    scope = null;
-  }
-
-  var removeCondition = function (e) { return e.scope === scope; };
-
-  for (var i = 0; i < this.items.length; ++i) {
-    if (removeCondition(this$1.items[i])) {
-      this$1.items.splice(i, 1);
-      --i;
-    }
-  }
-};
-
-/**
-   * Collects errors into groups or for a specific field.
-   *
-   * @param{string} field The field name.
-   * @param{string} scope The scope name.
-   * @param {Boolean} map If it should map the errors to strings instead of objects.
-   * @return {Array} errors The errors for the specified field.
-   */
-ErrorBag.prototype.collect = function collect (field, scope, map) {
-    if ( map === void 0 ) map = true;
-
-  if (! field) {
-    var collection = {};
-    this.items.forEach(function (e) {
-      if (! collection[e.field]) {
-        collection[e.field] = [];
-      }
-
-      collection[e.field].push(map ? e.msg : e);
-    });
-
-    return collection;
-  }
-
-  field = !isNullOrUndefined(field) ? String(field) : field;
-  if (isNullOrUndefined(scope)) {
-    return this.items.filter(function (e) { return e.field === field; }).map(function (e) { return (map ? e.msg : e); });
-  }
-
-  return this.items.filter(function (e) { return e.field === field && e.scope === scope; })
-    .map(function (e) { return (map ? e.msg : e); });
-};
-/**
-   * Gets the internal array length.
-   *
-   * @return {Number} length The internal array length.
-   */
-ErrorBag.prototype.count = function count () {
-  return this.items.length;
-};
-
-/**
- * Finds and fetches the first error message for the specified field id.
- *
- * @param {String} id
- */
-ErrorBag.prototype.firstById = function firstById (id) {
-  var error = find(this.items, function (i) { return i.id === id; });
-
-  return error ? error.msg : null;
-};
-
-/**
-   * Gets the first error message for a specific field.
-   *
-   * @param{String} field The field name.
-   * @return {String|null} message The error message.
-   */
-ErrorBag.prototype.first = function first (field, scope) {
-    var this$1 = this;
-    if ( scope === void 0 ) scope = null;
-
-  field = !isNullOrUndefined(field) ? String(field) : field;
-  var selector = this._selector(field);
-  var scoped = this._scope(field);
-
-  if (scoped) {
-    var result = this.first(scoped.name, scoped.scope);
-    // if such result exist, return it. otherwise it could be a field.
-    // with dot in its name.
-    if (result) {
-      return result;
-    }
-  }
-
-  if (selector) {
-    return this.firstByRule(selector.name, selector.rule, scope);
-  }
-
-  for (var i = 0; i < this.items.length; ++i) {
-    if (this$1.items[i].field === field && (this$1.items[i].scope === scope)) {
-      return this$1.items[i].msg;
-    }
-  }
-
-  return null;
-};
-
-/**
-   * Returns the first error rule for the specified field
-   *
-   * @param {string} field The specified field.
-   * @return {string|null} First error rule on the specified field if one is found, otherwise null
-   */
-ErrorBag.prototype.firstRule = function firstRule (field, scope) {
-  var errors = this.collect(field, scope, false);
-
-  return (errors.length && errors[0].rule) || null;
-};
-
-/**
-   * Checks if the internal array has at least one error for the specified field.
-   *
-   * @param{string} field The specified field.
-   * @return {Boolean} result True if at least one error is found, false otherwise.
-   */
-ErrorBag.prototype.has = function has (field, scope) {
-    if ( scope === void 0 ) scope = null;
-
-  return !! this.first(field, scope);
-};
-
-/**
-   * Gets the first error message for a specific field and a rule.
-   * @param {String} name The name of the field.
-   * @param {String} rule The name of the rule.
-   * @param {String} scope The name of the scope (optional).
-   */
-ErrorBag.prototype.firstByRule = function firstByRule (name, rule, scope) {
-  var error = this.collect(name, scope, false).filter(function (e) { return e.rule === rule; })[0];
-
-  return (error && error.msg) || null;
-};
-/**
-   * Gets the first error message for a specific field that not match the rule.
-   * @param {String} name The name of the field.
-   * @param {String} rule The name of the rule.
-   * @param {String} scope The name of the scope (optional).
-   */
-ErrorBag.prototype.firstNot = function firstNot (name, rule, scope) {
-    if ( rule === void 0 ) rule = 'required';
-
-  var error = this.collect(name, scope, false).filter(function (e) { return e.rule !== rule; })[0];
-
-  return (error && error.msg) || null;
-};
-
-/**
- * Removes errors by matching against the id.
- * @param {String} id
- */
-ErrorBag.prototype.removeById = function removeById (id) {
-    var this$1 = this;
-
-  for (var i = 0; i < this.items.length; ++i) {
-    if (this$1.items[i].id === id) {
-      this$1.items.splice(i, 1);
-      --i;
-    }
-  }
-};
-
-/**
-   * Removes all error messages associated with a specific field.
-   *
-   * @param{String} field The field which messages are to be removed.
-   * @param {String} scope The Scope name, optional.
-   * @param {String} id The field id, optional.
-   */
-ErrorBag.prototype.remove = function remove (field, scope, id) {
-    var this$1 = this;
-
-  field = !isNullOrUndefined(field) ? String(field) : field;
-  var removeCondition = function (e) {
-    if (e.id && id) {
-      return e.id === id;
-    }
-
-    if (!isNullOrUndefined(scope)) {
-      return e.field === field && e.scope === scope;
-    }
-
-    return e.field === field && e.scope === null;
-  };
-
-  for (var i = 0; i < this.items.length; ++i) {
-    if (removeCondition(this$1.items[i])) {
-      this$1.items.splice(i, 1);
-      --i;
-    }
-  }
-};
-
-/**
-   * Get the field attributes if there's a rule selector.
-   *
-   * @param{String} field The specified field.
-   * @return {Object|null}
-   */
-ErrorBag.prototype._selector = function _selector (field) {
-  if (field.indexOf(':') > -1) {
-    var ref = field.split(':');
-      var name = ref[0];
-      var rule = ref[1];
-
-    return { name: name, rule: rule };
-  }
-
-  return null;
-};
-
-/**
-   * Get the field scope if specified using dot notation.
-   *
-   * @param {String} field the specifie field.
-   * @return {Object|null}
-   */
-ErrorBag.prototype._scope = function _scope (field) {
-  if (field.indexOf('.') > -1) {
-    var ref = field.split('.');
-      var scope = ref[0];
-      var name = ref.slice(1);
-
-    return { name: name.join('.'), scope: scope };
-  }
-
-  return null;
-};
-
-var Dictionary = function Dictionary (dictionary) {
-  if ( dictionary === void 0 ) dictionary = {};
-
-  this.container = {};
-  this.merge(dictionary);
-};
-
-Dictionary.prototype.hasLocale = function hasLocale (locale) {
-  return !! this.container[locale];
-};
-
-Dictionary.prototype.setDateFormat = function setDateFormat (locale, format) {
-  if (!this.container[locale]) {
-    this.container[locale] = {};
-  }
-
-  this.container[locale].dateFormat = format;
-};
-
-Dictionary.prototype.getDateFormat = function getDateFormat (locale) {
-  if (!this.container[locale]) {
-    return undefined;
-  }
-
-  return this.container[locale].dateFormat;
-};
-
-Dictionary.prototype.getMessage = function getMessage (locale, key, fallback) {
-  if (! this.hasMessage(locale, key)) {
-    return fallback || this._getDefaultMessage(locale);
-  }
-
-  return this.container[locale].messages[key];
-};
-
-/**
- * Gets a specific message for field. fallsback to the rule message.
- *
- * @param {String} locale
- * @param {String} field
- * @param {String} key
- */
-Dictionary.prototype.getFieldMessage = function getFieldMessage (locale, field, key) {
-  if (! this.hasLocale(locale)) {
-    return this.getMessage(locale, key);
-  }
-
-  var dict = this.container[locale].custom && this.container[locale].custom[field];
-  if (! dict || ! dict[key]) {
-    return this.getMessage(locale, key);
-  }
-
-  return dict[key];
-};
-
-Dictionary.prototype._getDefaultMessage = function _getDefaultMessage (locale) {
-  if (this.hasMessage(locale, '_default')) {
-    return this.container[locale].messages._default;
-  }
-
-  return this.container.en.messages._default;
-};
-
-Dictionary.prototype.getAttribute = function getAttribute (locale, key, fallback) {
-    if ( fallback === void 0 ) fallback = '';
-
-  if (! this.hasAttribute(locale, key)) {
-    return fallback;
-  }
-
-  return this.container[locale].attributes[key];
-};
-
-Dictionary.prototype.hasMessage = function hasMessage (locale, key) {
-  return !! (
-    this.hasLocale(locale) &&
-          this.container[locale].messages &&
-          this.container[locale].messages[key]
-  );
-};
-
-Dictionary.prototype.hasAttribute = function hasAttribute (locale, key) {
-  return !! (
-    this.hasLocale(locale) &&
-          this.container[locale].attributes &&
-          this.container[locale].attributes[key]
-  );
-};
-
-Dictionary.prototype.merge = function merge (dictionary) {
-  this._merge(this.container, dictionary);
-};
-
-Dictionary.prototype.setMessage = function setMessage (locale, key, message) {
-  if (! this.hasLocale(locale)) {
-    this.container[locale] = {
-      messages: {},
-      attributes: {}
-    };
-  }
-
-  this.container[locale].messages[key] = message;
-};
-
-Dictionary.prototype.setAttribute = function setAttribute (locale, key, attribute) {
-  if (! this.hasLocale(locale)) {
-    this.container[locale] = {
-      messages: {},
-      attributes: {}
-    };
-  }
-
-  this.container[locale].attributes[key] = attribute;
-};
-
-Dictionary.prototype._merge = function _merge (target, source) {
-    var this$1 = this;
-
-  if (! (isObject(target) && isObject(source))) {
-    return target;
-  }
-
-  Object.keys(source).forEach(function (key) {
-    if (isObject(source[key])) {
-      if (! target[key]) {
-        assign(target, ( obj = {}, obj[key] = {}, obj ));
-          var obj;
-      }
-
-      this$1._merge(target[key], source[key]);
-      return;
-    }
-
-    assign(target, ( obj$1 = {}, obj$1[key] = source[key], obj$1 ));
-      var obj$1;
-  });
-
-  return target;
-};
-
 /**
  * Formates file size.
  *
@@ -4657,6 +4252,411 @@ if (isDefinedGlobally()) {
   VeeValidate.Validator.addLocale(locale$1);
 }
 
+// 
+
+var ErrorBag = function ErrorBag () {
+  this.items = [];
+};
+
+/**
+ * Adds an error to the internal array.
+ */
+ErrorBag.prototype.add = function add (error) {
+  // handle old signature.
+  if (arguments.length > 1) {
+    error = {
+      field: arguments[0],
+      msg: arguments[1],
+      rule: arguments[2],
+      scope: !isNullOrUndefined(arguments[3]) ? arguments[3] : null
+    };
+  }
+
+  error.scope = !isNullOrUndefined(error.scope) ? error.scope : null;
+  this.items.push(error);
+};
+
+/**
+ * Updates a field error with the new field scope.
+ */
+ErrorBag.prototype.update = function update (id, error) {
+  var item = find(this.items, function (i) { return i.id === id; });
+  if (!item) {
+    return;
+  }
+
+  var idx = this.items.indexOf(item);
+  this.items.splice(idx, 1);
+  item.scope = error.scope;
+  this.items.push(item);
+};
+
+/**
+ * Gets all error messages from the internal array.
+ */
+ErrorBag.prototype.all = function all (scope) {
+  if (isNullOrUndefined(scope)) {
+    return this.items.map(function (e) { return e.msg; });
+  }
+
+  return this.items.filter(function (e) { return e.scope === scope; }).map(function (e) { return e.msg; });
+};
+
+/**
+ * Checks if there are any errors in the internal array.
+ */
+ErrorBag.prototype.any = function any (scope) {
+  if (isNullOrUndefined(scope)) {
+    return !!this.items.length;
+  }
+
+  return !!this.items.filter(function (e) { return e.scope === scope; }).length;
+};
+
+/**
+ * Removes all items from the internal array.
+ */
+ErrorBag.prototype.clear = function clear (scope) {
+    var this$1 = this;
+
+  if (isNullOrUndefined(scope)) {
+    scope = null;
+  }
+
+  for (var i = 0; i < this.items.length; ++i) {
+    if (this$1.items[i].scope === scope) {
+      this$1.items.splice(i, 1);
+      --i;
+    }
+  }
+};
+
+/**
+ * Collects errors into groups or for a specific field.
+ */
+ErrorBag.prototype.collect = function collect (field, scope, map) {
+    if ( map === void 0 ) map = true;
+
+  if (!field) {
+    var collection = {};
+    this.items.forEach(function (e) {
+      if (! collection[e.field]) {
+        collection[e.field] = [];
+      }
+
+      collection[e.field].push(map ? e.msg : e);
+    });
+
+    return collection;
+  }
+
+  field = !isNullOrUndefined(field) ? String(field) : field;
+  if (isNullOrUndefined(scope)) {
+    return this.items.filter(function (e) { return e.field === field; }).map(function (e) { return (map ? e.msg : e); });
+  }
+
+  return this.items.filter(function (e) { return e.field === field && e.scope === scope; })
+    .map(function (e) { return (map ? e.msg : e); });
+};
+/**
+ * Gets the internal array length.
+ */
+ErrorBag.prototype.count = function count () {
+  return this.items.length;
+};
+
+/**
+ * Finds and fetches the first error message for the specified field id.
+ */
+ErrorBag.prototype.firstById = function firstById (id) {
+  var error = find(this.items, function (i) { return i.id === id; });
+
+  return error ? error.msg : null;
+};
+
+/**
+ * Gets the first error message for a specific field.
+ */
+ErrorBag.prototype.first = function first (field, scope) {
+    var this$1 = this;
+    if ( scope === void 0 ) scope = null;
+
+  field = !isNullOrUndefined(field) ? String(field) : field;
+  var selector = this._selector(field);
+  var scoped = this._scope(field);
+
+  if (scoped) {
+    var result = this.first(scoped.name, scoped.scope);
+    // if such result exist, return it. otherwise it could be a field.
+    // with dot in its name.
+    if (result) {
+      return result;
+    }
+  }
+
+  if (selector) {
+    return this.firstByRule(selector.name, selector.rule, scope);
+  }
+
+  for (var i = 0; i < this.items.length; ++i) {
+    if (this$1.items[i].field === field && (this$1.items[i].scope === scope)) {
+      return this$1.items[i].msg;
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Returns the first error rule for the specified field
+ */
+ErrorBag.prototype.firstRule = function firstRule (field, scope) {
+  var errors = this.collect(field, scope, false);
+
+  return (errors.length && errors[0].rule) || null;
+};
+
+/**
+ * Checks if the internal array has at least one error for the specified field.
+ */
+ErrorBag.prototype.has = function has (field, scope) {
+    if ( scope === void 0 ) scope = null;
+
+  return !!this.first(field, scope);
+};
+
+/**
+ * Gets the first error message for a specific field and a rule.
+ */
+ErrorBag.prototype.firstByRule = function firstByRule (name, rule, scope) {
+    if ( scope === void 0 ) scope = null;
+
+  var error = this.collect(name, scope, false).filter(function (e) { return e.rule === rule; })[0];
+
+  return (error && error.msg) || null;
+};
+
+/**
+ * Gets the first error message for a specific field that not match the rule.
+ */
+ErrorBag.prototype.firstNot = function firstNot (name, rule, scope) {
+    if ( rule === void 0 ) rule = 'required';
+    if ( scope === void 0 ) scope = null;
+
+  var error = this.collect(name, scope, false).filter(function (e) { return e.rule !== rule; })[0];
+
+  return (error && error.msg) || null;
+};
+
+/**
+ * Removes errors by matching against the id.
+ */
+ErrorBag.prototype.removeById = function removeById (id) {
+    var this$1 = this;
+
+  for (var i = 0; i < this.items.length; ++i) {
+    if (this$1.items[i].id === id) {
+      this$1.items.splice(i, 1);
+      --i;
+    }
+  }
+};
+
+/**
+ * Removes all error messages associated with a specific field.
+ */
+ErrorBag.prototype.remove = function remove (field, scope, id) {
+    var this$1 = this;
+
+  field = !isNullOrUndefined(field) ? String(field) : field;
+  var removeCondition = function (e) {
+    if (e.id && id) {
+      return e.id === id;
+    }
+
+    if (!isNullOrUndefined(scope)) {
+      return e.field === field && e.scope === scope;
+    }
+
+    return e.field === field && e.scope === null;
+  };
+
+  for (var i = 0; i < this.items.length; ++i) {
+    if (removeCondition(this$1.items[i])) {
+      this$1.items.splice(i, 1);
+      --i;
+    }
+  }
+};
+
+/**
+ * Get the field attributes if there's a rule selector.
+ */
+ErrorBag.prototype._selector = function _selector (field) {
+  if (field.indexOf(':') > -1) {
+    var ref = field.split(':');
+      var name = ref[0];
+      var rule = ref[1];
+
+    return { name: name, rule: rule };
+  }
+
+  return null;
+};
+
+/**
+ * Get the field scope if specified using dot notation.
+ */
+ErrorBag.prototype._scope = function _scope (field) {
+  if (field.indexOf('.') > -1) {
+    var ref = field.split('.');
+      var scope = ref[0];
+      var name = ref.slice(1);
+
+    return { name: name.join('.'), scope: scope };
+  }
+
+  return null;
+};
+
+// 
+
+var Dictionary = function Dictionary (dictionary) {
+  if ( dictionary === void 0 ) dictionary = {};
+
+  this.container = {};
+  this.merge(dictionary);
+};
+
+Dictionary.prototype.hasLocale = function hasLocale (locale) {
+  return !!this.container[locale];
+};
+
+Dictionary.prototype.setDateFormat = function setDateFormat (locale, format) {
+  if (!this.container[locale]) {
+    this.container[locale] = {};
+  }
+
+  this.container[locale].dateFormat = format;
+};
+
+Dictionary.prototype.getDateFormat = function getDateFormat (locale) {
+  if (!this.container[locale]) {
+    return undefined;
+  }
+
+  return this.container[locale].dateFormat;
+};
+
+Dictionary.prototype.getMessage = function getMessage (locale, key, fallback) {
+  if (!this.hasMessage(locale, key)) {
+    return fallback || this._getDefaultMessage(locale);
+  }
+
+  return this.container[locale].messages[key];
+};
+
+/**
+ * Gets a specific message for field. falls back to the rule message.
+ */
+Dictionary.prototype.getFieldMessage = function getFieldMessage (locale, field, key) {
+  if (!this.hasLocale(locale)) {
+    return this.getMessage(locale, key);
+  }
+
+  var dict = this.container[locale].custom && this.container[locale].custom[field];
+  if (!dict || !dict[key]) {
+    return this.getMessage(locale, key);
+  }
+
+  return dict[key];
+};
+
+Dictionary.prototype._getDefaultMessage = function _getDefaultMessage (locale) {
+  if (this.hasMessage(locale, '_default')) {
+    return this.container[locale].messages._default;
+  }
+
+  return this.container.en.messages._default;
+};
+
+Dictionary.prototype.getAttribute = function getAttribute (locale, key, fallback) {
+    if ( fallback === void 0 ) fallback = '';
+
+  if (!this.hasAttribute(locale, key)) {
+    return fallback;
+  }
+
+  return this.container[locale].attributes[key];
+};
+
+Dictionary.prototype.hasMessage = function hasMessage (locale, key) {
+  return !! (
+    this.hasLocale(locale) &&
+          this.container[locale].messages &&
+          this.container[locale].messages[key]
+  );
+};
+
+Dictionary.prototype.hasAttribute = function hasAttribute (locale, key) {
+  return !! (
+    this.hasLocale(locale) &&
+          this.container[locale].attributes &&
+          this.container[locale].attributes[key]
+  );
+};
+
+Dictionary.prototype.merge = function merge (dictionary) {
+  this._merge(this.container, dictionary);
+};
+
+Dictionary.prototype.setMessage = function setMessage (locale, key, message) {
+  if (! this.hasLocale(locale)) {
+    this.container[locale] = {
+      messages: {},
+      attributes: {}
+    };
+  }
+
+  this.container[locale].messages[key] = message;
+};
+
+Dictionary.prototype.setAttribute = function setAttribute (locale, key, attribute) {
+  if (! this.hasLocale(locale)) {
+    this.container[locale] = {
+      messages: {},
+      attributes: {}
+    };
+  }
+
+  this.container[locale].attributes[key] = attribute;
+};
+
+Dictionary.prototype._merge = function _merge (target, source) {
+    var this$1 = this;
+
+  if (! (isObject(target) && isObject(source))) {
+    return target;
+  }
+
+  Object.keys(source).forEach(function (key) {
+    if (isObject(source[key])) {
+      if (! target[key]) {
+        assign(target, ( obj = {}, obj[key] = {}, obj ));
+          var obj;
+      }
+
+      this$1._merge(target[key], source[key]);
+      return;
+    }
+
+    assign(target, ( obj$1 = {}, obj$1[key] = source[key], obj$1 ));
+      var obj$1;
+  });
+
+  return target;
+};
+
 /**
  * Generates the options required to construct a field.
  */
@@ -4688,6 +4688,14 @@ Generator.generate = function generate (el, binding, vnode, options) {
     aria: options.aria,
     initialValue: Generator.resolveInitialValue(vnode)
   };
+};
+
+Generator.getCtorConfig = function getCtorConfig (vnode) {
+  if (!vnode.child) { return null; }
+
+  var config = getPath('child.$options.$_veeValidate', vnode);
+
+  return config;
 };
 
 /**
@@ -4769,11 +4777,18 @@ Generator.resolveAlias = function resolveAlias (el, vnode) {
  * @param {*} vnode
  */
 Generator.resolveEvents = function resolveEvents (el, vnode) {
-  if (vnode.child) {
-    return getDataAttribute(el, 'validate-on') || (vnode.child.$attrs && vnode.child.$attrs['data-vv-validate-on']);
+  var events = getDataAttribute(el, 'validate-on');
+
+  if (!events && vnode.child && vnode.child.$attrs) {
+    events = vnode.child.$attrs['data-vv-validate-on'];
   }
 
-  return getDataAttribute(el, 'validate-on');
+  if (!events && vnode.child) {
+    var config = Generator.getCtorConfig(vnode);
+    events = config.events;
+  }
+
+  return events;
 };
 
 /**
@@ -4830,11 +4845,28 @@ Generator.resolveModel = function resolveModel (binding, vnode) {
    * @return {String} The field name.
    */
 Generator.resolveName = function resolveName (el, vnode) {
-  if (vnode.child) {
-    return getDataAttribute(el, 'name') || (vnode.child.$attrs && (vnode.child.$attrs['data-vv-name'] || vnode.child.$attrs['name'])) || vnode.child.name;
+  var name = getDataAttribute(el, 'name');
+
+  if (!name && !vnode.child) {
+    return el.name;
   }
 
-  return getDataAttribute(el, 'name') || el.name;
+  if (!name && vnode.child && vnode.child.$attrs) {
+    name = vnode.child.$attrs['data-vv-name'] || vnode.child.$attrs['name'];
+  }
+
+  if (!name && vnode.child) {
+    var config = Generator.getCtorConfig(vnode);
+    if (config && isCallable(config.name)) {
+      var boundGetter = config.name.bind(vnode.child);
+
+      return boundGetter();
+    }
+
+    return vnode.child.name;
+  }
+
+  return name;
 };
 
 /**
@@ -4848,11 +4880,23 @@ Generator.resolveGetter = function resolveGetter (el, vnode, model) {
   }
 
   if (vnode.child) {
-    return function () {
-      var path = getDataAttribute(el, 'value-path') || (vnode.child.$attrs && vnode.child.$attrs['data-vv-value-path']);
-      if (path) {
+    var path = getDataAttribute(el, 'value-path') || (vnode.child.$attrs && vnode.child.$attrs['data-vv-value-path']);
+    if (path) {
+      return function () {
         return getPath(path, vnode.child);
-      }
+      };
+    }
+
+    var config = Generator.getCtorConfig(vnode);
+    if (config && isCallable(config.value)) {
+      var boundGetter = config.value.bind(vnode.child);
+
+      return function () {
+        return boundGetter();
+      };
+    }
+
+    return function () {
       return vnode.child.value;
     };
   }
@@ -4883,6 +4927,8 @@ Generator.resolveGetter = function resolveGetter (el, vnode, model) {
   };
   }
 };
+
+// 
 
 var DEFAULT_OPTIONS = {
   targetOf: null,
@@ -4928,6 +4974,7 @@ var Field = function Field (el, options) {
   this.flags = createFlags();
   this.vm = options.vm;
   this.component = options.component;
+  this.ctorConfig = this.component ? getPath('$options.$_veeValidate', this.component) : undefined;
   this.update(options);
   this.updated = false;
 };
@@ -4952,7 +4999,7 @@ prototypeAccessors$1.isRequired.get = function () {
 };
 
 prototypeAccessors$1.isDisabled.get = function () {
-  return (this.isVue && this.component.disabled) || (this.el && this.el.disabled);
+  return !!(this.component && this.component.disabled) || !!(this.el && this.el.disabled);
 };
 
 prototypeAccessors$1.isHeadless.get = function () {
@@ -4961,16 +5008,16 @@ prototypeAccessors$1.isHeadless.get = function () {
 
 /**
  * Gets the display name (user-friendly name).
- * @return {String}
  */
+
 prototypeAccessors$1.displayName.get = function () {
   return isCallable(this.alias) ? this.alias() : this.alias;
 };
 
 /**
  * Gets the input value.
- * @return {*}
  */
+
 prototypeAccessors$1.value.get = function () {
   if (!isCallable(this.getter)) {
     return undefined;
@@ -4982,8 +5029,13 @@ prototypeAccessors$1.value.get = function () {
 /**
  * If the field rejects false as a valid value for the required rule.
  */
+
 prototypeAccessors$1.rejectsFalse.get = function () {
-  if (this.isVue || this.isHeadless) {
+  if (this.isVue && this.ctorConfig) {
+    return !!this.ctorConfig.rejectsFalse;
+  }
+
+  if (this.isHeadless) {
     return false;
   }
 
@@ -4992,7 +5044,6 @@ prototypeAccessors$1.rejectsFalse.get = function () {
 
 /**
  * Determines if the instance matches the options provided.
- * @param {Object} options The matching options.
  */
 Field.prototype.matches = function matches (options) {
   if (options.id) {
@@ -5015,8 +5066,7 @@ Field.prototype.matches = function matches (options) {
 };
 
 /**
- *
- * @param {Object} options
+ * Updates the field with changed data.
  */
 Field.prototype.update = function update (options) {
   this.targetOf = options.targetOf || null;
@@ -5083,7 +5133,6 @@ Field.prototype.reset = function reset () {
 
 /**
  * Sets the flags and their negated counterparts, and updates the classes and re-adds action listeners.
- * @param {Object} flags
  */
 Field.prototype.setFlags = function setFlags (flags) {
     var this$1 = this;
@@ -5160,7 +5209,11 @@ Field.prototype.updateDependencies = function updateDependencies () {
     }
 
     if (!el) {
-      el = this$1.vm.$el.querySelector(("input[name=\"" + selector + "\"]"));
+      try {
+        el = this$1.vm.$el.querySelector(("input[name=\"" + selector + "\"]"));
+      } catch (err) {
+        el = null;
+      }
     }
 
     if (!el) {
@@ -5196,7 +5249,6 @@ Field.prototype.updateDependencies = function updateDependencies () {
 
 /**
  * Removes listeners.
- * @param {RegExp} tag
  */
 Field.prototype.unwatch = function unwatch (tag) {
     if ( tag === void 0 ) tag = null;
@@ -5206,6 +5258,7 @@ Field.prototype.unwatch = function unwatch (tag) {
     this.watchers = [];
     return;
   }
+
   this.watchers.filter(function (w) { return tag.test(w.tag); }).forEach(function (w) { return w.unwatch(); });
   this.watchers = this.watchers.filter(function (w) { return !tag.test(w.tag); });
 };
@@ -5313,7 +5366,7 @@ Field.prototype.addValueListeners = function addValueListeners () {
       while ( len-- ) args[ len ] = arguments[ len ];
 
     // if its a DOM event, resolve the value, otherwise use the first parameter as the value.
-    if (args.length === 0 || (isCallable(Event) && args[0] instanceof Event) || args[0].srcElement) {
+    if (args.length === 0 || (isCallable(Event) && args[0] instanceof Event) || (args[0] && args[0].srcElement)) {
       args[0] = this$1.value;
     }
     this$1.validator.validate(("#" + (this$1.id)), args[0]);
@@ -5406,6 +5459,8 @@ Field.prototype.destroy = function destroy () {
 
 Object.defineProperties( Field.prototype, prototypeAccessors$1 );
 
+// 
+
 var FieldBag = function FieldBag () {
   this.items = [];
 };
@@ -5413,24 +5468,22 @@ var FieldBag = function FieldBag () {
 var prototypeAccessors$2 = { length: {} };
 
 /**
- * @return {Number} The current collection length.
+ * Gets the current items length.
  */
+
 prototypeAccessors$2.length.get = function () {
   return this.items.length;
 };
 
 /**
  * Finds the first field that matches the provided matcher object.
- * @param {Object} matcher
- * @return {Field|undefined} The first matching item.
  */
 FieldBag.prototype.find = function find$1 (matcher) {
   return find(this.items, function (item) { return item.matches(matcher); });
 };
 
 /**
- * @param {Object|Array} matcher
- * @return {Array} Array of matching field items.
+ * Filters the items down to the matched fields.
  */
 FieldBag.prototype.filter = function filter (matcher) {
   // multiple matchers to be tried.
@@ -5443,8 +5496,6 @@ FieldBag.prototype.filter = function filter (matcher) {
 
 /**
  * Maps the field items using the mapping function.
- *
- * @param {Function} mapper
  */
 FieldBag.prototype.map = function map (mapper) {
   return this.items.map(mapper);
@@ -5452,8 +5503,6 @@ FieldBag.prototype.map = function map (mapper) {
 
 /**
  * Finds and removes the first field that matches the provided matcher object, returns the removed item.
- * @param {Object|Field} matcher
- * @return {Field|null}
  */
 FieldBag.prototype.remove = function remove (matcher) {
   var item = null;
@@ -5473,8 +5522,6 @@ FieldBag.prototype.remove = function remove (matcher) {
 
 /**
  * Adds a field item to the list.
- *
- * @param {Field} item
  */
 FieldBag.prototype.push = function push (item) {
   if (! (item instanceof Field)) {
@@ -5494,12 +5541,14 @@ FieldBag.prototype.push = function push (item) {
 
 Object.defineProperties( FieldBag.prototype, prototypeAccessors$2 );
 
+// 
+
 var RULES = {};
 var LOCALE = 'en';
 var STRICT_MODE = true;
 var DICTIONARY = new Dictionary({
   en: {
-    messages: messages,
+    messages: {},
     attributes: {},
     custom: {}
   }
@@ -5538,42 +5587,42 @@ var prototypeAccessors = { dictionary: {},locale: {},rules: {} };
 var staticAccessors = { dictionary: {},locale: {},rules: {} };
 
 /**
- * @return {Dictionary}
+ * Getter for the dictionary.
  */
 prototypeAccessors.dictionary.get = function () {
   return DICTIONARY;
 };
 
 /**
- * @return {Dictionary}
+ * Static Getter for the dictionary.
  */
 staticAccessors.dictionary.get = function () {
   return DICTIONARY;
 };
 
 /**
- * @return {String}
+ * Getter for the current locale.
  */
 prototypeAccessors.locale.get = function () {
   return LOCALE;
 };
 
 /**
- * @param {String} value
+ * Setter for the validator locale.
  */
 prototypeAccessors.locale.set = function (value) {
   Validator.locale = value;
 };
 
 /**
-* @return {String}
+* Static getter for the validator locale.
 */
 staticAccessors.locale.get = function () {
   return LOCALE;
 };
 
 /**
- * @param {String} value
+ * Static setter for the validator locale.
  */
 staticAccessors.locale.set = function (value) {
   /* istanbul ignore if */
@@ -5586,14 +5635,14 @@ staticAccessors.locale.set = function (value) {
 };
 
 /**
- * @return {Object}
+ * Getter for the rules object.
  */
 prototypeAccessors.rules.get = function () {
   return RULES;
 };
 
 /**
- * @return {Object}
+ * Static Getter for the rules object.
  */
 staticAccessors.rules.get = function () {
   return RULES;
@@ -5601,9 +5650,6 @@ staticAccessors.rules.get = function () {
 
 /**
  * Static constructor.
- *
- * @param{object} validations The validations object.
- * @return {Validator} validator A validator object.
  */
 Validator.create = function create (validations, options) {
   return new Validator(validations, options);
@@ -5611,9 +5657,6 @@ Validator.create = function create (validations, options) {
 
 /**
  * Adds a custom validator to the list of validation rules.
- *
- * @param{string} name The name of the validator.
- * @param{object|function} validator The validator object/function.
  */
 Validator.extend = function extend (name, validator) {
   Validator._guardExtend(name, validator);
@@ -5622,7 +5665,6 @@ Validator.extend = function extend (name, validator) {
 
 /**
  * Removes a rule from the list of validators.
- * @param {String} name The name of the validator/rule.
  */
 Validator.remove = function remove (name) {
   delete RULES[name];
@@ -5631,7 +5673,6 @@ Validator.remove = function remove (name) {
 /**
  * Sets the default locale for all validators.
  * @deprecated
- * @param {String} language The locale id.
  */
 Validator.setLocale = function setLocale (language) {
     if ( language === void 0 ) language = 'en';
@@ -5659,7 +5700,6 @@ Validator.prototype.installDateTimeValidators = function installDateTimeValidato
  * Sets the operating mode for all newly created validators.
  * strictMode = true: Values without a rule are invalid and cause failure.
  * strictMode = false: Values without a rule are valid and are skipped.
- * @param {Boolean} strictMode.
  */
 Validator.setStrictMode = function setStrictMode (strictMode) {
     if ( strictMode === void 0 ) strictMode = true;
@@ -5670,7 +5710,6 @@ Validator.setStrictMode = function setStrictMode (strictMode) {
 /**
  * Updates the dictionary, overwriting existing values and adding new ones.
  * @deprecated
- * @param{object} data The dictionary object.
  */
 Validator.updateDictionary = function updateDictionary (data) {
   DICTIONARY.merge(data);
@@ -5679,7 +5718,6 @@ Validator.updateDictionary = function updateDictionary (data) {
 /**
  * Adds a locale object to the dictionary.
  * @deprecated
- * @param {Object} locale
  */
 Validator.addLocale = function addLocale (locale) {
   if (! locale.name) {
@@ -5702,9 +5740,6 @@ Validator.prototype.addLocale = function addLocale (locale) {
 
 /**
  * Adds and sets the current locale for the validator.
- *
- * @param {String} lang
- * @param {Object} dictionary
  */
 Validator.prototype.localize = function localize (lang, dictionary) {
   Validator.localize(lang, dictionary);
@@ -5712,9 +5747,6 @@ Validator.prototype.localize = function localize (lang, dictionary) {
 
 /**
  * Adds and sets the current locale for the validator.
- *
- * @param {String} lang
- * @param {Object} dictionary
  */
 Validator.localize = function localize (lang, dictionary) {
   // merge the dictionary.
@@ -5729,9 +5761,6 @@ Validator.localize = function localize (lang, dictionary) {
 
 /**
  * Registers a field to be validated.
- *
- * @param{Field|Object} name The field name.
- * @return {Field}
  */
 Validator.prototype.attach = function attach (field) {
   // deprecate: handle old signature.
@@ -5766,9 +5795,6 @@ Validator.prototype.attach = function attach (field) {
 
 /**
  * Sets the flags on a field.
- *
- * @param {String} name
- * @param {Object} flags
  */
 Validator.prototype.flag = function flag (name, flags) {
   var field = this._resolveField(name);
@@ -5781,9 +5807,6 @@ Validator.prototype.flag = function flag (name, flags) {
 
 /**
  * Removes a field from the validator.
- *
- * @param{String} name The name of the field.
- * @param {String} scope The name of the field scope.
  */
 Validator.prototype.detach = function detach (name, scope) {
   var field = name instanceof Field ? name : this._resolveField(name, scope);
@@ -5804,9 +5827,6 @@ Validator.prototype.detach = function detach (name, scope) {
 
 /**
  * Adds a custom validator to the list of validation rules.
- *
- * @param{string} name The name of the validator.
- * @param{object|function} validator The validator object/function.
  */
 Validator.prototype.extend = function extend (name, validator) {
   Validator.extend(name, validator);
@@ -5814,9 +5834,6 @@ Validator.prototype.extend = function extend (name, validator) {
 
 /**
  * Updates a field, updating both errors and flags.
- *
- * @param {String} id
- * @param {Object} diff
  */
 Validator.prototype.update = function update (id, ref) {
     var scope = ref.scope;
@@ -5836,16 +5853,14 @@ Validator.prototype.update = function update (id, ref) {
 
 /**
  * Removes a rule from the list of validators.
- * @param {String} name The name of the validator/rule.
  */
 Validator.prototype.remove = function remove (name) {
   Validator.remove(name);
 };
 
 /**
- * Sets the validator current langauge.
- *
- * @param {string} language locale or language id.
+ * Sets the validator current language.
+ * @deprecated
  */
 Validator.prototype.setLocale = function setLocale (language) {
   this.locale = language;
@@ -5854,7 +5869,6 @@ Validator.prototype.setLocale = function setLocale (language) {
 /**
  * Updates the messages dictionary, overwriting existing values and adding new ones.
  * @deprecated
- * @param{object} data The messages object.
  */
 Validator.prototype.updateDictionary = function updateDictionary (data) {
   Validator.updateDictionary(data);
@@ -5862,11 +5876,6 @@ Validator.prototype.updateDictionary = function updateDictionary (data) {
 
 /**
  * Validates a value against a registered field validations.
- *
- * @param{string} name the field name.
- * @param{*} value The value to be validated.
- * @param {String} scope The scope of the field.
- * @return {Promise}
  */
 Validator.prototype.validate = function validate (name, value, scope) {
     if ( scope === void 0 ) scope = null;
@@ -5878,7 +5887,7 @@ Validator.prototype.validate = function validate (name, value, scope) {
     return this.validateScopes();
   }
 
-  // overload to validate scopeless fields.
+  // overload to validate scope-less fields.
   if (arguments.length === 1 && arguments[0] === '*') {
     return this.validateAll();
   }
@@ -5919,8 +5928,6 @@ Validator.prototype.validate = function validate (name, value, scope) {
 
 /**
  * Pauses the validator.
- *
- * @return {Validator}
  */
 Validator.prototype.pause = function pause () {
   this.paused = true;
@@ -5930,8 +5937,6 @@ Validator.prototype.pause = function pause () {
 
 /**
  * Resumes the validator.
- *
- * @return {Validator}
  */
 Validator.prototype.resume = function resume () {
   this.paused = false;
@@ -5941,8 +5946,6 @@ Validator.prototype.resume = function resume () {
 
 /**
  * Validates each value against the corresponding field validations.
- * @param{Object|String} values The values to be validated.
- * @return {Promise} Returns a promise with the validation result.
  */
 Validator.prototype.validateAll = function validateAll (values) {
     var arguments$1 = arguments;
@@ -5974,8 +5977,6 @@ Validator.prototype.validateAll = function validateAll (values) {
 
 /**
  * Validates all scopes.
- *
- * @returns {Promise} All promises resulted from each scope.
  */
 Validator.prototype.validateScopes = function validateScopes () {
     var this$1 = this;
@@ -5992,9 +5993,6 @@ Validator.prototype.validateScopes = function validateScopes () {
 
 /**
  * Creates the fields to be validated.
- *
- * @param{object} validations
- * @return {object} Normalized object.
  */
 Validator.prototype._createFields = function _createFields (validations) {
     var this$1 = this;
@@ -6008,9 +6006,7 @@ Validator.prototype._createFields = function _createFields (validations) {
 };
 
 /**
- * Date rules need the existance of a format, so date_format must be supplied.
- * @param {String} name The rule name.
- * @param {Array} validations the field validations.
+ * Date rules need the existence of a format, so date_format must be supplied.
  */
 Validator.prototype._getDateFormat = function _getDateFormat (validations) {
   var format = null;
@@ -6030,11 +6026,6 @@ Validator.prototype._isADateRule = function _isADateRule (rule) {
 
 /**
  * Formats an error message for field and a rule.
- *
- * @param{Field} field The field object.
- * @param{object} rule Normalized rule object.
- * @param {object} data Additional Information about the validation result.
- * @return {string} Formatted error message.
  */
 Validator.prototype._formatErrorMessage = function _formatErrorMessage (field, rule, data, targetName) {
     if ( data === void 0 ) data = {};
@@ -6069,10 +6060,7 @@ Validator.prototype._getLocalizedParams = function _getLocalizedParams (rule, ta
 };
 
 /**
- * Resolves an appropiate display name, first checking 'data-as' or the registered 'prettyName'
- * Then the dictionary, then fallsback to field name.
- * @param {Field} field The field object.
- * @return {String} The name to be used in the errors.
+ * Resolves an appropriate display name, first checking 'data-as' or the registered 'prettyName'
  */
 Validator.prototype._getFieldDisplayName = function _getFieldDisplayName (field) {
   return field.displayName || this.dictionary.getAttribute(LOCALE, field.name, field.name);
@@ -6080,8 +6068,6 @@ Validator.prototype._getFieldDisplayName = function _getFieldDisplayName (field)
 
 /**
  * Adds a field flags to the flags collection.
- * @param {Field} field
- * @param {String|null} scope
  */
 Validator.prototype._addFlag = function _addFlag (field, scope) {
     if ( scope === void 0 ) scope = null;
@@ -6100,11 +6086,6 @@ Validator.prototype._addFlag = function _addFlag (field, scope) {
 
 /**
  * Tests a single input value against a rule.
- *
- * @param{Field} field The field under validation.
- * @param{*} valuethe value of the field.
- * @param{object} rule the rule object.
- * @return {boolean} Whether it passes the check.
  */
 Validator.prototype._test = function _test (field, value, rule, silent) {
     var this$1 = this;
@@ -6116,7 +6097,7 @@ Validator.prototype._test = function _test (field, value, rule, silent) {
     throw createError(("No such validator '" + (rule.name) + "' exists."));
   }
 
-  // has field depenencies
+  // has field dependencies.
   if (/(confirmed|after|before)/.test(rule.name)) {
     var target = find(field.dependencies, function (d) { return d.name === rule.name; });
     if (target) {
@@ -6182,9 +6163,6 @@ Validator.prototype._test = function _test (field, value, rule, silent) {
 
 /**
  * Merges a validator object into the RULES and Messages.
- *
- * @param{string} name The name of the validator.
- * @param{function|object} validator The validator object.
  */
 Validator._merge = function _merge (name, validator) {
   if (isCallable(validator)) {
@@ -6213,10 +6191,7 @@ Validator._merge = function _merge (name, validator) {
 };
 
 /**
- * Guards from extnsion violations.
- *
- * @param{string} name name of the validation rule.
- * @param{object} validator a validation rule object.
+ * Guards from extension violations.
  */
 Validator._guardExtend = function _guardExtend (name, validator) {
   if (isCallable(validator)) {
@@ -6240,9 +6215,6 @@ Validator._guardExtend = function _guardExtend (name, validator) {
 
 /**
  * Tries different strategies to find a field.
- * @param {String} name
- * @param {String} scope
- * @return {Field}
  */
 Validator.prototype._resolveField = function _resolveField (name, scope) {
   if (!isNullOrUndefined(scope)) {
@@ -6268,25 +6240,18 @@ Validator.prototype._resolveField = function _resolveField (name, scope) {
 
 /**
  * Handles when a field is not found depending on the strict flag.
- *
- * @param {String} name
- * @param {String} scope
  */
 Validator.prototype._handleFieldNotFound = function _handleFieldNotFound (name, scope) {
   if (!this.strict) { return Promise.resolve(true); }
 
   var fullName = isNullOrUndefined(scope) ? name : ("" + (!isNullOrUndefined(scope) ? scope + '.' : '') + name);
   throw createError(
-    ("Validating a non-existant field: \"" + fullName + "\". Use \"attach()\" first.")
+    ("Validating a non-existent field: \"" + fullName + "\". Use \"attach()\" first.")
   );
 };
 
 /**
  * Starts the validation process.
- *
- * @param {Field} field
- * @param {Promise} value
- * @param {Boolean} silent
  */
 Validator.prototype._validate = function _validate (field, value, silent) {
     var this$1 = this;
@@ -6324,6 +6289,8 @@ Validator.prototype._validate = function _validate (field, value, silent) {
 Object.defineProperties( Validator.prototype, prototypeAccessors );
 Object.defineProperties( Validator, staticAccessors );
 
+// 
+
 var fakeFlags = createProxy({}, {
   get: function get (target, key) {
     // is a scope
@@ -6337,7 +6304,6 @@ var fakeFlags = createProxy({}, {
 
 /**
  * Checks if a parent validator instance was requested.
- * @param {Object|Array} injections
  */
 var requestsValidator = function (injections) {
   if (! injections) {
@@ -6358,8 +6324,6 @@ var requestsValidator = function (injections) {
 
 /**
  * Creates a validator instance.
- * @param {Vue} vm
- * @param {Object} options
  */
 var createValidator = function (vm, options) { return new Validator(null, { vm: vm, fastExit: options.fastExit }); };
 
@@ -6378,8 +6342,15 @@ var makeMixin = function (Vue, options) {
   };
 
   mixin.beforeCreate = function beforeCreate () {
+    // TODO: Deprecate
+    /* istanbul ignore next */
+    if (this.$options.$validates) {
+      warn('The ctor $validates option has been deprecated please set the $_veeValidate.validator option to "new" instead');
+      this.$validator = createValidator(this, options);
+    }
+
     // if its a root instance, inject anyways, or if it requested a new instance.
-    if (this.$options.$validates || !this.$parent) {
+    if (!this.$parent || (this.$options.$_veeValidate && /new/.test(this.$options.$_veeValidate.validator))) {
       this.$validator = createValidator(this, options);
     }
 
@@ -6443,12 +6414,10 @@ var config = {
   validity: false
 };
 
+// 
+
 /**
- * 
- * 
  * Finds the requested field by id from the context object.
- * @param {Object} context
- * @return {Field|null}
  */
 var findField = function (el, context) {
   if (!context || !context.$validator) {
@@ -6538,6 +6507,8 @@ function install (_Vue, options) {
   Vue.directive('validate', createDirective$1(config$$1));
 }
 
+// 
+
 function use (plugin, options) {
   if ( options === void 0 ) options = {};
 
@@ -6547,6 +6518,8 @@ function use (plugin, options) {
 
   plugin({ Validator: Validator, ErrorBag: ErrorBag, Rules: Validator.rules }, options);
 }
+
+// 
 
 var normalize = function (fields) {
   if (Array.isArray(fields)) {
@@ -6566,8 +6539,6 @@ var normalize = function (fields) {
 
 /**
  * Maps fields to computed functions.
- *
- * @param {Array|Object} fields
  */
 var mapFields = function (fields) {
   var normalized = normalize(fields);
@@ -6617,6 +6588,11 @@ var rulesPlugin = function (ref) {
 
   Object.keys(Rules).forEach(function (rule) {
     Validator.extend(rule, Rules[rule]);
+  });
+
+  // Merge the english messages.
+  Validator.localize('en', {
+    messages: messages
   });
 };
 
